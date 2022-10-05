@@ -5,17 +5,38 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { listUsers } from "../actions/userAction";
+import { listUsers, deleteUser } from "../actions/userAction";
 const UserListPage = () => {
+  const [removeMsg, setRemoveMsg] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { users, loading, error } = useSelector((state) => state.userList);
-  const deleteHandler = (id) => {};
+  const { userInfo } = useSelector((state) => state.userLogin);
+  const { success: successDelete, message } = useSelector(
+    (state) => state.userDelete
+  );
+
+  const deleteHandler = (id) => {
+    if (window.confirm("Are you user")) dispatch(deleteUser(id));
+  };
   useEffect(() => {
-    dispatch(listUsers());
-  }, [dispatch]);
+    if (userInfo && userInfo.isAdmin) {
+      dispatch(listUsers());
+    } else {
+      navigate("/login");
+    }
+  }, [dispatch, navigate, successDelete]);
+  useEffect(() => {
+    setRemoveMsg(message);
+    setTimeout(() => {
+      setRemoveMsg("");
+    }, 3000);
+  }, [successDelete]);
+
   return (
     <>
       <h1>Users</h1>
+      {removeMsg && <Message>{removeMsg}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
@@ -45,7 +66,7 @@ const UserListPage = () => {
                   )}
                 </td>
                 <td>
-                  <LinkContainer to={`/user/${user._id}/edit`}>
+                  <LinkContainer to={`/admin/user/${user._id}/edit`}>
                     <Button variant="light" className="btn-sm">
                       <i className="fas fa-edit"></i>
                     </Button>

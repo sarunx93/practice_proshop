@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Order from "../models/Order.js";
-
+import Product from "../models/Product.js";
 export const addOrderItems = asyncHandler(async (req, res) => {
   const {
     orderItems,
@@ -26,6 +26,15 @@ export const addOrderItems = asyncHandler(async (req, res) => {
       shippingPrice,
       totalPrice,
     });
+    for (const index in order.orderItems) {
+      const item = order.orderItems[index];
+
+      const product = await Product.findById(item.product);
+
+      product.countInStocks -= item.qty;
+
+      await product.save();
+    }
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);
   }

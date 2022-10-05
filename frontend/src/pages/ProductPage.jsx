@@ -24,6 +24,9 @@ const ProductPage = () => {
   const { product, loading, error } = useSelector(
     (state) => state.productDetails
   );
+
+  console.log(product);
+
   useEffect(() => {
     dispatch(listProductsDetails(id));
   }, [dispatch, id]);

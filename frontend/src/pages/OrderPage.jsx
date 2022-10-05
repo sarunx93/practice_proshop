@@ -9,6 +9,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { payOrder } from "../actions/orderAction";
 import { ORDER_PAY_RESET } from "../constants/orderConstatns";
+import { CART_RESET_AFTER_PAY } from "../constants/cartConstants";
 // const formatter = new Intl.NumberFormat('en-US', {
 //     style: 'currency',
 //     currency: 'USD',
@@ -39,7 +40,7 @@ const OrderPage = () => {
   useEffect(() => {
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal");
-      console.log(clientId);
+
       const script = document.createElement("script");
       script.type = "text/javascript";
       script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
@@ -50,10 +51,10 @@ const OrderPage = () => {
 
       document.body.appendChild(script);
     };
-    console.log(order);
 
     if (!order || successPay || order._id !== id) {
       dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: CART_RESET_AFTER_PAY });
       dispatch(getOrderDetails(id));
     } else if (!order.isPaid) {
       if (!window.paypal) {

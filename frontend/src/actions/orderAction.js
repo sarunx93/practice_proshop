@@ -13,6 +13,7 @@ import {
   ORDER_LIST_MY_SUCCESS,
   ORDER_LIST_MY_FAIL,
 } from "../constants/orderConstatns";
+import { CART_RESET_AFTER_PAY } from "../constants/cartConstants";
 import axios from "axios";
 export const createOrder = (order) => async (dispatch, getState) => {
   try {
