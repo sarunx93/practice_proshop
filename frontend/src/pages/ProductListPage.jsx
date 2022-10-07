@@ -5,10 +5,16 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { listProducts, deleteProduct } from "../actions/productActions";
-
+import {
+  listProducts,
+  deleteProduct,
+  createProduct,
+} from "../actions/productActions";
+import {
+  PRODUCT_CREATE_RESET,
+  PRODUCT_CREATE_REQUEST,
+} from "../constants/productConstant";
 const ProductListPage = () => {
-  const [removeMsg, setRemoveMsg] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { products, loading, error } = useSelector(
@@ -19,22 +25,42 @@ const ProductListPage = () => {
     loading: loadingDelete,
     error: errorDelete,
   } = useSelector((state) => state.productDelete);
+  const {
+    success: successCreate,
+    loading: loadingCreate,
+    error: errorCreate,
+    product: createdProduct,
+  } = useSelector((state) => state.productCreate);
   const { userInfo } = useSelector((state) => state.userLogin);
 
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listProducts());
-    } else {
+    dispatch({ type: PRODUCT_CREATE_RESET });
+    if (!userInfo.isAdmin) {
       navigate("/login");
     }
-  }, [dispatch, navigate, successDelete, userInfo]);
+    if (successCreate) {
+      navigate(`/admin/product/${createdProduct._id}/edit`);
+    } else {
+      dispatch(listProducts());
+    }
+  }, [
+    dispatch,
+    navigate,
+    successDelete,
+    userInfo,
+    successCreate,
+    createdProduct,
+  ]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you user")) {
       dispatch(deleteProduct(id));
     }
   };
-  const createProductHandler = (product) => {};
+  const createProductHandler = () => {
+    //to be fixed : when the 'Create Product' button is clicked, navigate the user to create page and only send the request when the create button is clicked, not dispatch the action right away.
+    dispatch(createProduct());
+  };
   return (
     <>
       <Row className="align-items-center">
@@ -51,6 +77,8 @@ const ProductListPage = () => {
       {/* {removeMsg && <Message>{removeMsg}</Message>} */}
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+      {loadingCreate && <Loader />}
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
