@@ -13,6 +13,7 @@ import OrderPage from "./pages/OrderPage";
 import UserListPage from "./pages/UserListPage";
 import UserEditPage from "./pages/UserEditPage";
 import ProductListPage from "./pages/ProductListPage";
+import OrderListPage from "./pages/OrderListPage";
 import ProductEditPage from "./pages/ProductEditPage";
 import { Container } from "react-bootstrap";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -39,6 +40,7 @@ function App() {
               <Route path="/admin/userList" element={<UserListPage />} />
               <Route path="/order/:id" element={<OrderPage />} />
               <Route path="/admin/productlist" element={<ProductListPage />} />
+              <Route path="/admin/orderlist" element={<OrderListPage />} />
               <Route path="/admin/user/:id/edit" element={<UserEditPage />} />
               <Route
                 path="/admin/product/:id/edit"
