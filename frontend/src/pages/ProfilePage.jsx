@@ -7,7 +7,7 @@ import Loader from "../components/Loader";
 import { listMyOrders } from "../actions/orderAction";
 import { getUserDetail, updateUserProfile } from "../actions/userAction";
 import { LinkContainer } from "react-router-bootstrap";
-
+import { USER_UPDATE_RESET } from "../constants/userConstants";
 const ProfilePage = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -31,7 +31,8 @@ const ProfilePage = () => {
     if (!userInfo) {
       navigate("/login");
     } else {
-      if (!user.name) {
+      if (!user.name || !user || success) {
+        dispatch({ type: USER_UPDATE_RESET });
         dispatch(getUserDetail("profile"));
         dispatch(listMyOrders());
       } else {
@@ -39,7 +40,7 @@ const ProfilePage = () => {
         setEmail(user.email);
       }
     }
-  }, [userInfo, navigate, user]);
+  }, [userInfo, navigate, user, success]);
 
   const submitHandler = (e) => {
     e.preventDefault();

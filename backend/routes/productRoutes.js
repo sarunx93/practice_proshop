@@ -6,6 +6,8 @@ import {
   deleteProduct,
   createProduct,
   updateProduct,
+  createProductReview,
+  getTopProducts,
 } from "../controllers/productController.js";
 
 const router = express.Router();
@@ -15,6 +17,9 @@ const router = express.Router();
 //access: Public Route
 
 router.route("/").get(getProducts).post(protect, admin, createProduct);
+
+router.route("/:id/reviews").post(protect, createProductReview);
+router.route("/top").get(getTopProducts);
 
 //desc: Fetch a product by id
 //route: GET /api/products/:id

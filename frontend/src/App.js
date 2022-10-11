@@ -26,6 +26,12 @@ function App() {
           <Container>
             <Routes>
               <Route path="/" element={<Home />} exact />
+              <Route path="/search/:keyword" element={<Home />} exact />
+              <Route path="/page/:pageNumber" element={<Home />} />
+              <Route
+                path="/search/:keyword/page/:pageNumber"
+                element={<Home />}
+              />
               <Route path="/products/:id" element={<ProductPage />} />
               <Route path="/cart">
                 <Route path=":id" element={<CartPage />} />
@@ -39,7 +45,16 @@ function App() {
               <Route path="/placeorder" element={<PlaceOrderPage />} />
               <Route path="/admin/userList" element={<UserListPage />} />
               <Route path="/order/:id" element={<OrderPage />} />
-              <Route path="/admin/productlist" element={<ProductListPage />} />
+              <Route
+                path="/admin/productlist"
+                element={<ProductListPage />}
+                exact
+              />
+              <Route
+                path="/admin/productlist/:pageNumber"
+                element={<ProductListPage />}
+                exact
+              />
               <Route path="/admin/orderlist" element={<OrderListPage />} />
               <Route path="/admin/user/:id/edit" element={<UserEditPage />} />
               <Route
